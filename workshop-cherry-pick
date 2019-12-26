@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Usage: ./workshop-cherry-pick [commit] --start [start-branch]
+
+set -e
+
+# keep this array up to date with all the branches (in order)
+ws=("workshop0-starter"
+    "workshop0-step1"
+    "workshop0-solved"
+    "workshop0-final"
+    "workshop1"
+    "workshop1-final"
+    "workshop2"
+    "workshop2-final"
+    "workshop3-final"
+    "noauth"
+   )
+
+# use most recent commit if commit not specified
+commit=$1
+if [ -z "$1" ] || [ "$1" == "--start" ]; then
+    commit=$(git rev-parse HEAD)
+fi
+
+message=$(git log -1 --pretty=%B $commit)
+
+# start on the first workshop if not specified
+startbr=${ws[0]}
+if [ "$1" == "--start" ]; then
+    startbr=$2
+elif [ "$2" == "--start" ]; then
+    startbr=$3
+fi
+
+# if ws does not contain START
+if [[ ! " ${ws[@]} " =~ " ${startbr} " ]]; then
+    echo "ERROR: invalid branch $startbr"
+    exit 1
+fi
+
+echo "cherry-picking commit $commit to all branches starting from $startbr"
+
+origbranch=$(git symbolic-ref --short HEAD)
+started=false
+for branch in "${ws[@]}"; do
+    if [ "$branch" == "$startbr" ]; then
+        started=true
+    fi
+
+    $started || continue
+
+    # actually apply the cherry-pick here
+    git checkout $branch
+
+    if [ "$message" == "$(git log -1 --pretty=%B)" ]; then
+        echo "WARN: commit was already cherry-picked to this branch, skipping"
+        echo "------------"
+        continue
+    fi
+
+    if git cherry-pick $commit ; then
+        echo "success"
+        echo "------------"
+    else 
+        echo "WARN: conflict encountered! please resolve this and re-run the script"
+        exit 1
+    fi 
+done
+
+git checkout $origbranch
+echo "done"
