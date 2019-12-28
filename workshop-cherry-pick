@@ -61,15 +61,22 @@ for branch in "${ws[@]}"; do
 
     $started || continue
 
-    # actually apply the cherry-pick here
-    git checkout $branch
+    brstatus=$(git checkout $branch)
 
+    # makes sure you actually have the must up-to-date branch
+    if [[ "$brstatus" =~ "branch is behind" ]]; then
+        echo "branch is behind, pulling"
+        git pull
+    fi
+    
+    # makes the script idempotent
     if [ "$message" == "$(git log -1 --pretty=%B)" ]; then
         echo "WARN: commit was already cherry-picked to this branch, skipping"
         echo "------------"
         continue
     fi
 
+    # actually apply the cherry-pick here
     if git cherry-pick $commit ; then
         echo "success"
         echo "------------"

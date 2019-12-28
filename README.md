@@ -4,7 +4,7 @@ utility scripts for web.lab staff
 
 ## workshop-cherry-pick
 
-Mass cherry-picks the specified commit to all workshops.
+Mass cherry-picks the specified commit to all workshops. Ensures that all branches are up-to-date with origin before cherry-picking. After running this script, use `git push --all` to push all local branches.
 
 Usage: `./workshop-cherry-pick [commit] --start [start-branch]`
 
