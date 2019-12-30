@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./workshop-cherry-pick [commit] --start [start-branch]
+# Usage: ./workshop-cherry-pick [commit] --start [start-branch] --end [end-branch]
 
 set -e
 
@@ -30,20 +30,38 @@ ws=("workshop0-starter"
    )
 
 # use most recent commit if commit not specified
-commit=$1
-if [ -z "$1" ] || [ "$1" == "--start" ]; then
-    commit=$(git rev-parse HEAD)
-fi
-
-message=$(git log -1 --pretty=%B $commit)
+commit=$(git rev-parse HEAD)
 
 # start on the first workshop if not specified
 startbr=${ws[0]}
-if [ "$1" == "--start" ]; then
-    startbr=$2
-elif [ "$2" == "--start" ]; then
-    startbr=$3
-fi
+
+# no end branch by default
+endbr=""
+
+# iterate through script parameters
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -s|--start)
+    startbr="$2"
+    shift # consume --start
+    shift # consume value
+    ;;
+    -e|--end)
+    endbr="$2"
+    shift # consume --end
+    shift # consume value
+    ;;
+    *)    # positional arg
+    commit="$1"
+    shift # consume value
+    ;;
+esac
+done
+
+message=$(git log -1 --pretty=%B $commit)
 
 # if ws does not contain START
 if [[ ! " ${ws[@]} " =~ " ${startbr} " ]]; then
@@ -54,13 +72,17 @@ fi
 echo "cherry-picking commit $commit to all branches starting from $startbr"
 
 origbranch=$(git symbolic-ref --short HEAD)
-started=false
+active=false
 for branch in "${ws[@]}"; do
     if [ "$branch" == "$startbr" ]; then
-        started=true
+        active=true
     fi
 
-    $started || continue
+    $active || continue
+
+    if [ "$branch" == "$endbr" ]; then
+        active=false
+    fi
 
     brstatus=$(git checkout $branch)
 
