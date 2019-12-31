@@ -39,6 +39,8 @@ ws=("workshop0-starter"
     "workshop3-final"
     "workshop4-starter"
     "workshop4-complete"
+    "workshop5-starter"
+    "workshop5-complete"
     "noauth"
    )
 
