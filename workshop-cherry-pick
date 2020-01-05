@@ -45,6 +45,16 @@ ws=("workshop0-starter"
     "workshop5-starter"
     "workshop5-complete"
     "noauth"
+    "workshop6-starter"
+    "workshop6-step1"
+    "workshop6-step2"
+    "workshop6-step3"
+    "workshop6-step4"
+    "workshop6-step5"
+    "workshop6-step6"
+    "workshop6-step7"
+    "workshop6-step8"
+    "workshop6-complete"
    )
 
 # use most recent commit if commit not specified
