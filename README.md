@@ -20,3 +20,12 @@ e.g. to apply commit `a1b2c3` to all of workshop 0
 # short option also supported
 ./workshop-cherry-pick a1b2c3 -s workshop0-starter -e workshop0-complete
 ```
+
+## environment-setup-grader
+
+Can give this to students to make sure they set up their development environment. Checks:
+
+- node installed to version 12 or 13
+- npm installed
+- git installed
+- they have a MongoDB SRV
