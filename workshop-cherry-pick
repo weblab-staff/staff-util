@@ -55,6 +55,23 @@ ws=("workshop0-starter"
     "workshop6-step7"
     "workshop6-step8"
     "workshop6-complete"
+    "workshop7-starter"
+    "workshop7-step1"
+    "workshop7-step2"
+    "workshop7-step3"
+    "workshop7-step4"
+    "workshop7-step5"
+    "workshop8-complete"
+    "workshop8-starter"
+    "workshop8-step1"
+    "workshop8-step2"
+    "workshop8-step3"
+    "workshop8-step4"
+    "workshop8-step5"
+    "workshop8-step6"
+    "workshop8-step7"
+    "workshop8-step8"
+    "workshop8-complete"
    )
 
 # use most recent commit if commit not specified
@@ -119,7 +136,7 @@ for branch in "${ws[@]}"; do
         echo "branch is behind, pulling"
         git pull
     fi
-    
+
     # makes the script idempotent
     if [ "$message" == "$(git log -1 --pretty=%B)" ]; then
         echo "WARN: commit was already cherry-picked to this branch, skipping"
@@ -131,10 +148,10 @@ for branch in "${ws[@]}"; do
     if git cherry-pick $commit ; then
         echo "success"
         echo "------------"
-    else 
+    else
         echo "WARN: conflict encountered! please resolve this and re-run the script"
         exit 1
-    fi 
+    fi
 done
 
 git checkout $origbranch
