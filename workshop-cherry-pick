@@ -61,7 +61,7 @@ ws=("workshop0-starter"
     "workshop7-step3"
     "workshop7-step4"
     "workshop7-step5"
-    "workshop8-complete"
+    "workshop7-complete"
     "workshop8-starter"
     "workshop8-step0"
     "workshop8-step1"
@@ -146,7 +146,7 @@ for branch in "${ws[@]}"; do
     fi
 
     # actually apply the cherry-pick here
-    if git cherry-pick $commit ; then
+    if git cherry-pick --allow-empty $commit ; then
         echo "success"
         echo "------------"
     else
